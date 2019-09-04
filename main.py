@@ -9,7 +9,7 @@ import gc
 import as1130
 
 # Font
-font_8x5_data = bytes[ [0x00,0x00,0x00,0x00,0x00], #
+font_8x5_data = [ [0x00,0x00,0x00,0x00,0x00], #
 	[0x00,0x00,0xbe,0x00,0x00], # !
 	[0x00,0x07,0x00,0x07,0x00], # "
 	[0x48,0xfc,0x48,0xfc,0x48], # #
@@ -104,8 +104,7 @@ font_8x5_data = bytes[ [0x00,0x00,0x00,0x00,0x00], #
 	[0x00,0x00,0xff,0x00,0x00], # |
 	[0x00,0x01,0xee,0x10,0x00], # ]
 	[0x20,0x10,0x10,0x20,0x20], # ~
-	[0x00,0x00,0x00,0x00,0x00]
-
+	[0x00,0x00,0x00,0x00,0x00] ]
 # Start of application code
 
 ## Init the AS1130
@@ -114,20 +113,21 @@ led = as1130.AS1130_I2C(i2c)
 
 fb = as1130.FrameBuffer(24*8, 5)
 
-#ledfont = font(8, 5, font_8x5_data)
+ledfont = as1130.font(8, 5, font_8x5_data)
 
-#glpyh_A = font.glyph('!')
-#glyph_r = font.glyph('#')
-#glyph_t = font.glyph('$')
+glyph_A = ledfont.glyph('!')
+print(glyph_A)
+glyph_r = ledfont.glyph('#')
+glyph_t = ledfont.glyph('$')
 
-#fb.blit(0,0, glyph_A, ledfont.width, ledfont,height)
-#fb.blit(9,0, glyph_r, ledfont.width, ledfont,height)
-#fb.blit(17,0, glyph_t, ledfont.width, ledfont,height)
+fb.blit(0,0, glyph_A, ledfont.width, ledfont.height)
+fb.blit(9,0, glyph_r, ledfont.width, ledfont.height)
+fb.blit(17,0, glyph_t, ledfont.width, ledfont.height)
 
-for index in range(0, 192):
-    sinval = math.sin(index/4) * 2.5 + 2.5
-    fb.set_pixel_value(index, int(sinval), 0xFF)
-    fb.set_pixel_value(index, abs(4-int(sinval)), 0xFF)
+#for index in range(0, 192):
+#    sinval = math.sin(index/4) * 2.5 + 2.5
+#    fb.set_pixel_value(index, int(sinval), 0xFF)
+#    fb.set_pixel_value(index, abs(4-int(sinval)), 0xFF)
 
 led.draw_framebuffer(fb)
 print("draw done")

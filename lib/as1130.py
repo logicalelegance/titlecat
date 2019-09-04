@@ -218,15 +218,14 @@ class FrameBuffer:
 
 class font:
     """Convenience class to hold monospace font data and sizeing info"""
-    def __init(self, width, height, fontbuffer):
+    def __init__(self, width, height, fontbuffer):
         self.width = width
         self.height = height
-        self._bitmaptable = fontbuffer
+        self.bitmaptable = fontbuffer
 
     def glyph(self, character):
-        index = int(character) - 32
-        mv = memoryview(self._bitmaptable)
-        glyph_bits = mv[index]
+        index = ord(character) - 32
+        glyph_bits = self.bitmaptable[index]
         return glyph_bits
 
 ################################### END OF AS1130 DRIVER ############################
