@@ -1,3 +1,5 @@
+import time
+
 # AS 1130 driver goes here
 from micropython import const
 
@@ -52,14 +54,17 @@ NUM_FRAMES = const(36)
 class AS1130:
     """Driver base for the AS1130 LED Matrix Controller."""
     def __init__(self):
-
         # Set up in a sensible default configuration.
+        time.sleep(0.25)
+        # reset
+        self.control_write(SHUTDOWN, 0b00000000)  # Turn on the display
+
         self.set_ram_config(1)
         self.set_current(10)
         self.control_write(DSP_OPTION, 0b11101011)
-        self.control_write(MOVIE, 0b01000000)      # Turn movies off
-        self.control_write(MOVIEMODE, 0b00000001)
-     #   self.control_write(PICTURE, 0b01000000)   # Display frame 1
+        self.control_write(MOVIE, 0b00000000)      # Turn movies off
+        self.control_write(MOVIEMODE, 0b00000000)
+        self.control_write(PICTURE, 0b00000000)   # Display frame 1
         self.control_write(FRAMETIME, 0b01110001)
         self.control_write(SHUTDOWN, 0b00000011)  # Turn on the display
         print("Init done")
@@ -71,6 +76,16 @@ class AS1130:
 
         # Write the control value to the control subregister
         self._write_register_byte(control_register, value)
+
+    def play_movie(self, play):
+        if play:
+            self.control_write(MOVIE, 0b01000000)      # Turn movies on
+        else:
+            self.control_write(MOVIE, 0b01000000)      # Turn movies on
+
+    def set_movie_frames(self, frames):
+        frames = frames - 1
+        self.control_write(MOVIEMODE, frames)
 
     def select_frame(self, frame):
 
@@ -111,29 +126,6 @@ class AS1130:
         # LED on/off position or PWM position)
         raise NotImplementedError
 
-class AS1130_I2C(AS1130):
-
-    """Driver for the AS1130 LED Matrix Controller over I2C."""
-
-    def __init__(self, i2c, *, address=0x30):
-        import adafruit_bus_device.i2c_device as i2c_device
-        self._i2c = i2c_device.I2CDevice(i2c, address)
-        self._buffer = bytearray(2)
-        super().__init__()
-
-    def _write_register_byte(self, register, value):
-
-        self._buffer[0] = register & 0xFF
-        self._buffer[1] = value & 0xFF
-        with self._i2c as i2c:
-            i2c.write(self._buffer, start = 0, end = 2)
-
-    def _write_value_at_id(self, id, value):
-        self._buffer[0] = id & 0xFF
-        self._buffer[1] = value & 0xFF
-        with self._i2c as i2c:
-            i2c.write(self._buffer, start = 0, end = 2)
-
     def _databit(self, x, y):
         return(1<<(7-(x&7)))
 
@@ -173,59 +165,39 @@ class AS1130_I2C(AS1130):
         width = framebuffer.width
         height = framebuffer.height
 
-        numberofframes = int(width / 24)
 
+        numberofframes = int(width / 24)
+        self.set_movie_frames(numberofframes)
         for frame in range(0, numberofframes):
 
             # copy subframe
             subframe = bytearray(24*5)
             for x in range(0, 24):
                 for y in range(0, 5):
-                    subframe[x + y * 24] = framebuffer._framebuffer[x + 24 * frame + width * y]
+                    subframe[x + y * 24] = framebuffer._framebuffer[x + (24 * frame) + width * y]
             self._write_buffer_to_frame(frame, subframe, int(width / numberofframes), height)
 
-class FrameBuffer:
+class AS1130_I2C(AS1130):
 
-    """Frame buffer for LED Matrix"""
-    def __init__(self, width, height):
+    """Driver for the AS1130 LED Matrix Controller over I2C."""
 
-        # Single frame buffer, encoding brightness as
-        # pixel value. Values of 0 are turned off
-        self.width = width
-        self.height = height
-        self._framebuffer = bytearray(width * height)
+    def __init__(self, i2c, *, address=0x30):
+        import adafruit_bus_device.i2c_device as i2c_device
+        self._i2c = i2c_device.I2CDevice(i2c, address)
+        self._buffer = bytearray(2)
+        super().__init__()
 
-    def blit(self, x, y, buffer, width, height):
-        start_pos = y * self.width + x
-        for y1 in range(0, height):
-            for x1 in range(0, width):
-                source_byte_pos = int((x1 + y1 * width) / 8)
-                source_bit_pos = x1 & 0x7
-                if ((buffer[source_byte_pos] & (0b10000000 >> source_bit_pos))):
-                    self._framebuffer[start_pos + x1 + (y+y1) * self.width] = 0xff
-                else:
-                    self._framebuffer[start_pos + x1 + (y+y1) * self.width] = 0x00
+    def _write_register_byte(self, register, value):
 
-    def set_pixel_value(self, x, y, val):
-        self._framebuffer[x + y * self.width] = 0xff
+        self._buffer[0] = register & 0xFF
+        self._buffer[1] = value & 0xFF
+        with self._i2c as i2c:
+            i2c.write(self._buffer, start = 0, end = 2)
 
-    def clear_buffer(self):
-        self._framebuffer = bytearray(width * height)
-
-    @property
-    def framebuffer(self):
-        return self._framebuffer
-
-class font:
-    """Convenience class to hold monospace font data and sizeing info"""
-    def __init__(self, width, height, fontbuffer):
-        self.width = width
-        self.height = height
-        self.bitmaptable = fontbuffer
-
-    def glyph(self, character):
-        index = ord(character) - 32
-        glyph_bits = self.bitmaptable[index]
-        return glyph_bits
+    def _write_value_at_id(self, id, value):
+        self._buffer[0] = id & 0xFF
+        self._buffer[1] = value & 0xFF
+        with self._i2c as i2c:
+            i2c.write(self._buffer, start = 0, end = 2)
 
 ################################### END OF AS1130 DRIVER ############################
