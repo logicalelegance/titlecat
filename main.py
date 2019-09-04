@@ -5,257 +5,124 @@ import board
 import busio
 import time
 import math
+import gc
+import as1130
 
-# AS 1130 driver goes here
-from micropython import const
-
-# Register definitions
-REGREG      = const(0xFD)
-DOTCORR     = const(0x80)
-CONTROL     = const(0xC0)
-
-FRAME0      = const(0x01)
-FRAME1      = const(0x02)
-FRAME2      = const(0x03)
-FRAME3      = const(0x04)
-FRAME4      = const(0x05)
-FRAME5      = const(0x06)
-FRAME6      = const(0x07)
-FRAME7      = const(0x08)
-FRAME8      = const(0x09)
-FRAME9      = const(0x0A)
-
-PWM0        = const(0x40)
-PWM1        = const(0x41)
-PWM2        = const(0x42)
-PWM3        = const(0x43)
-PWM4        = const(0x44)
-PWM5        = const(0x45)
-PWM6        = const(0x46)
-PWM7        = const(0x47)
-PWM8        = const(0x48)
-PWM9        = const(0x49)
-
-# Control register sub-registers
-PICTURE     = const(0x00)
-MOVIE       = const(0x01)
-MOVIEMODE   = const(0x02)
-FRAMETIME   = const(0x03)
-DSP_OPTION  = const(0x04)
-CURRENT     = const(0x05)
-AS_CONFIG   = const(0x06)
-INT_MASK    = const(0x07)
-INT_FRAME   = const(0x08)
-SHUTDOWN    = const(0x09)
-I2CMONITOR  = const(0x0A)
-CLK_SYNC    = const(0x0B)
-INT_STATUS  = const(0x0E)
-AS_STATUS   = const(0x0F)
-OPENLED     = const(0x20)
-
-# Various constants
-MILLIAMPS_FACTOR = 30.0 / 255.0
-NUM_FRAMES = const(36)
-
-class AS1130:
-    """Driver base for the AS1130 LED Matrix Controller."""
-    def __init__(self):
-
-        # Set up in a sensible default configuration.
-        self.set_ram_config(1)
-        self.set_current(10)
-        self.control_write(DSP_OPTION, 0b11101011)
-        self.control_write(MOVIE, 0b01000000)      # Turn movies off
-        self.control_write(MOVIEMODE, 0b00000001)
-     #   self.control_write(PICTURE, 0b01000000)   # Display frame 1
-        self.control_write(FRAMETIME, 0b01110001)
-        self.control_write(SHUTDOWN, 0b00000011)  # Turn on the display
-        print("Init done")
-
-    def control_write(self, control_register, value):
-
-        # Select the control register
-        self._write_register_byte(REGREG, CONTROL)
-
-        # Write the control value to the control subregister
-        self._write_register_byte(control_register, value)
-
-    def select_frame(self, frame):
-
-        # Write the frame select register
-        # Check the frame is in bounds TODO
-        self._write_register_byte(REGREG, frame + FRAME0)
-
-    def select_pwm(self, pwm):
-
-        # Write the PWM select register
-        # Check the PWM is in bounds TODO
-        self._write_register_byte(REGREG, pwm + PWM0)
-
-    def set_ram_config(self, ram_config):
-
-        self.control_write(AS_CONFIG, ram_config)
-
-    def set_current(self, milliAmps):
-
-        # Convert current to register value
-        if milliAmps > 30:
-            milliAmps = 30
-        if milliAmps < 0:
-            milliAmps = 0
-
-        register_value = int(milliAmps * MILLIAMPS_FACTOR)
-        self.control_write(CURRENT, 0x80)
-
-    def _write_register_byte(self, register, value):
-        # Write a single byte to the specified register
-        # Some commands will require to of these, one to
-        # select the control register, and one to select the
-        # subregister and write the value
-        raise NotImplementedError
-
-    def _write_value_at_id(self, id, value):
-        # Write a single byte to the specified id (usually a
-        # LED on/off position or PWM position)
-        raise NotImplementedError
-
-class AS1130_I2C(AS1130):
-
-    """Driver for the AS1130 LED Matrix Controller over I2C."""
-
-    def __init__(self, i2c, *, address=0x30):
-        import adafruit_bus_device.i2c_device as i2c_device
-        self._i2c = i2c_device.I2CDevice(i2c, address)
-        self._buffer = bytearray(2)
-        super().__init__()
-
-    def _write_register_byte(self, register, value):
-
-        self._buffer[0] = register & 0xFF
-        self._buffer[1] = value & 0xFF
-        with self._i2c as i2c:
-            i2c.write(self._buffer, start = 0, end = 2)
-
-    def _write_value_at_id(self, id, value):
-        self._buffer[0] = id & 0xFF
-        self._buffer[1] = value & 0xFF
-        with self._i2c as i2c:
-            i2c.write(self._buffer, start = 0, end = 2)
-
-    def _databit(self, x, y):
-        return(1<<(7-(x&7)))
-
-    def _databyte(self, x, y):
-        return int((y*3)+(x/8)) # for a 24x5 display
-
-    def _write_buffer_to_frame(self, framenum, buffer, width, height):
-        self.select_frame(framenum)
-
-        # build a buffer to write to the display
-        displaybuffer = bytearray(0x18)
-
-        for y in range(0, height):
-            for x in range(0, width):
-                if (buffer[x + y * width] != 0x00):
-                    ledIndex = (x*5+y)
-                    registerBitIndex = ledIndex%10
-                    registerIndex = int(ledIndex/10)*2+int(registerBitIndex/8)
-                    displaybuffer[registerIndex] |= (1<<(registerBitIndex&7))
-        displaybuffer[1] |= 0 # PWM Set 0
-        for counter in range(0, 0x18):
-            self._write_value_at_id(counter, displaybuffer[counter])
-
-        self.select_pwm(0)
-        for counter in range(0, 0x18):
-            # Set up the blink bits
-                self._write_value_at_id(counter, 0x00)
-
-        for counter in range(0x18, 0x9B):
-            # Set all PWM values
-            self._write_value_at_id(counter, 0xFF)
-
-
-    # Draw a large framebuffer to the screen, breaking it up in to frames that
-    # fit
-    def draw_framebuffer(self, framebuffer):
-        width = framebuffer.width
-        height = framebuffer.height
-
-        numberofframes = int(width / 24)
-
-        for frame in range(0, numberofframes):
-
-            # copy subframe
-            subframe = bytearray(24*5)
-            for x in range(0, 24):
-                for y in range(0, 5):
-                    subframe[x + y * 24] = framebuffer._framebuffer[x + 24 * frame + width * y]
-            self._write_buffer_to_frame(frame, subframe, int(width / numberofframes), height)
-
-class FrameBuffer:
-
-    """Frame buffer for LED Matrix"""
-    def __init__(self, width, height):
-
-        # Single frame buffer, encoding brightness as
-        # pixel value. Values of 0 are turned off
-        self.width = width
-        self.height = height
-        self._framebuffer = bytearray(width * height)
-
-    def blit(self, x, y, buffer, width, height):
-        start_pos = y * self.width + x
-        for y1 in range(0, height):
-            for x1 in range(0, width):
-                source_byte_pos = int((x1 + y1 * width) / 8)
-                source_bit_pos = x1 & 0x7
-                if ((buffer[source_byte_pos] & (0b10000000 >> source_bit_pos))):
-                    self._framebuffer[start_pos + x1 + (y+y1) * self.width] = 0xff
-                else:
-                    self._framebuffer[start_pos + x1 + (y+y1) * self.width] = 0x00
-
-    def set_pixel_value(self, x, y, val):
-        self._framebuffer[x + y * self.width] = 0xff
-
-    def clear_buffer(self):
-        self._framebuffer = bytearray(width * height)
-
-    @property
-    def framebuffer(self):
-        return self._framebuffer
-
-################################### END OF AS1130 DRIVER ############################
-
+# Font
+font_8x5_data = bytes[ [0x00,0x00,0x00,0x00,0x00], #
+	[0x00,0x00,0xbe,0x00,0x00], # !
+	[0x00,0x07,0x00,0x07,0x00], # "
+	[0x48,0xfc,0x48,0xfc,0x48], # #
+	[0x48,0x54,0xfe,0x54,0x24], # $
+	[0x88,0x54,0x28,0x50,0xa8], # %
+	[0x6c,0x92,0x92,0xac,0x40], # &
+	[0xa0,0x00,0x07,0x00,0x00], # '
+	[0x00,0x7c,0x82,0x01,0x00], # (
+	[0x00,0x01,0x82,0x7c,0x00], # )
+	[0x28,0x10,0x7c,0x10,0x28], # *
+	[0x10,0x10,0x7c,0x10,0x10], # +
+	[0x00,0x00,0x80,0x00,0x00], # ,
+	[0x10,0x10,0x10,0x10,0x10], # -
+	[0x00,0x00,0x80,0x00,0x00], # .
+	[0x00,0xc0,0x30,0x0c,0x03], # /
+	[0x7c,0x82,0x92,0x82,0x7c], # 0
+	[0x00,0x84,0xfe,0x80,0x00], # 1
+	[0xc4,0xa2,0x92,0x92,0x8c], # 2
+	[0x44,0x82,0x92,0x92,0x6c], # 3
+	[0x30,0x28,0x24,0xfe,0x20], # 4
+	[0x5e,0x92,0x92,0x92,0x62], # 5
+	[0x78,0x94,0x92,0x92,0x60], # 6
+	[0x02,0x82,0x62,0x1a,0x06], # 7
+	[0x6c,0x92,0x92,0x92,0x6c], # 8
+	[0x0c,0x92,0x92,0x52,0x3c], # 9
+	[0x00,0x00,0x48,0x00,0x00], # :
+	[0x00,0x80,0x48,0x00,0x00], # ;
+	[0x10,0x10,0x28,0x28,0x44], # <
+	[0x28,0x28,0x28,0x28,0x28], # =
+	[0x44,0x28,0x28,0x10,0x10], # >
+	[0x04,0x02,0xa2,0x12,0x0c], # ?
+	[0x7c,0x82,0xba,0xba,0xa2], # @
+	[0xfc,0x38,0x26,0x38,0xc0], # A
+	[0xfe,0x92,0x92,0x92,0x6c], # B
+	[0x7c,0x82,0x82,0x82,0x44], # C
+	[0xfe,0x82,0x82,0x44,0x38], # D
+	[0xfe,0x92,0x92,0x92,0x82], # E
+	[0xfe,0x12,0x12,0x12,0x02], # F
+	[0x7c,0x82,0x82,0x92,0xf4], # G
+	[0xfe,0x10,0x10,0x10,0xfe], # H
+	[0x00,0x82,0xfe,0x82,0x00], # I
+	[0x80,0x80,0x82,0x82,0x7e], # J
+	[0xfe,0x10,0x28,0x44,0x82], # K
+	[0xfe,0x80,0x80,0x80,0x80], # L
+	[0xfe,0x18,0x60,0x18,0xfe], # M
+	[0xfe,0x06,0x38,0xc0,0xfe], # N
+	[0x7c,0x82,0x82,0x82,0x7c], # O
+	[0xfe,0x12,0x12,0x12,0x0c], # P
+	[0x7c,0x82,0x82,0xc2,0xfc], # Q
+	[0xfe,0x12,0x12,0x12,0xec], # R
+	[0x4c,0x92,0x92,0x92,0x64], # S
+	[0x02,0x02,0xfe,0x02,0x02], # T
+	[0x7e,0x80,0x80,0x80,0x7e], # U
+	[0x0e,0x30,0xc0,0x30,0x0e], # V
+	[0x1e,0xe0,0x1c,0xe0,0x1e], # W
+	[0xc6,0x28,0x10,0x28,0xc6], # X
+	[0x0e,0x10,0xf0,0x10,0x0e], # Y
+	[0xc2,0xa2,0x92,0x8a,0x86], # Z
+	[0x00,0xff,0x01,0x01,0x00], # [
+	[0x03,0x0c,0x30,0xc0,0x00], # "\"
+	[0x00,0x01,0x01,0xff,0x00], # ]
+	[0x08,0x04,0x02,0x04,0x08], # ^
+	[0x00,0x00,0x00,0x00,0x00], # _
+	[0x00,0x00,0x02,0x04,0x00], # `
+	[0x40,0xa8,0xa8,0xa8,0xf0], # a
+	[0xff,0x88,0x88,0x88,0x70], # b
+	[0x70,0x88,0x88,0x88,0x88], # c
+	[0x70,0x88,0x88,0x88,0xff], # d
+	[0x70,0xa8,0xa8,0xa8,0xb0], # e
+	[0x08,0xfe,0x09,0x09,0x01], # f
+	[0x70,0x88,0x88,0x88,0xf0], # g
+	[0xff,0x08,0x08,0x08,0xf0], # h
+	[0x00,0x08,0xfa,0x00,0x00], # i
+	[0x00,0x00,0x08,0xfa,0x00], # j
+	[0x00,0xff,0x20,0x50,0x88], # k
+	[0x00,0x01,0xff,0x00,0x00], # l
+	[0xf8,0x08,0xf0,0x08,0xf0], # m
+	[0xf8,0x08,0x08,0x08,0xf0], # n
+	[0x70,0x88,0x88,0x88,0x70], # o
+	[0xf8,0x88,0x88,0x88,0x70], # p
+	[0x70,0x88,0x88,0x88,0xf8], # q
+	[0xf8,0x10,0x08,0x08,0x10], # r
+	[0x90,0xa8,0xa8,0xa8,0x48], # s
+	[0x00,0x7e,0x88,0x88,0x80], # t
+	[0x78,0x80,0x80,0x80,0xf8], # u
+	[0x18,0x60,0x80,0x60,0x18], # v
+	[0x38,0xc0,0x30,0xc0,0x38], # w
+	[0x88,0x50,0x20,0x50,0x88], # x
+	[0x78,0x80,0x80,0x80,0xf8], # y
+	[0x88,0xc8,0xa8,0x98,0x88], # z
+	[0x00,0x10,0xee,0x01,0x00], # [
+	[0x00,0x00,0xff,0x00,0x00], # |
+	[0x00,0x01,0xee,0x10,0x00], # ]
+	[0x20,0x10,0x10,0x20,0x20], # ~
+	[0x00,0x00,0x00,0x00,0x00]
 
 # Start of application code
 
 ## Init the AS1130
 i2c = busio.I2C(board.SCL, board.SDA)
-led = AS1130_I2C(i2c)
+led = as1130.AS1130_I2C(i2c)
 
-glyph1 = [ 0b11110000,
-           0b10000000,
-           0b10000000,
-           0b10000000,
-           0b11110000]
+fb = as1130.FrameBuffer(24*8, 5)
 
-glyph2 = [ 0b00010000,
-           0b00101000,
-           0b00111100,
-           0b01000010,
-           0b10000001
-          ]
+#ledfont = font(8, 5, font_8x5_data)
 
-glyph3 = [ 0b11111111,
-           0b00010000,
-           0b00010000,
-           0b00010000,
-           0b00010000]
+#glpyh_A = font.glyph('!')
+#glyph_r = font.glyph('#')
+#glyph_t = font.glyph('$')
 
-fb = FrameBuffer(24*8, 5)
-#fb.blit(0, 0, glyph1, 8, 5)
-#fb.blit(6, 0, glyph2, 8, 5)
-#fb.blit(14, 0, glyph3, 8, 5)
+#fb.blit(0,0, glyph_A, ledfont.width, ledfont,height)
+#fb.blit(9,0, glyph_r, ledfont.width, ledfont,height)
+#fb.blit(17,0, glyph_t, ledfont.width, ledfont,height)
 
 for index in range(0, 192):
     sinval = math.sin(index/4) * 2.5 + 2.5
