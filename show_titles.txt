@@ -1,0 +1,316 @@
+1: Start Tinkering
+2: My Little Pony Stopped Outputting
+3: Plenty of Candy, No Guns
+4: Are We Not Lawyers?
+5: Passion Is Contagious
+6: Do Robot Squirrels Dream of Electric Imps...
+7: Lights, Camera, Electrons
+8: Studebaker Love Story
+9: Kidnapped and Blindfolded
+10: Hands Off, Baby (Repeat)
+10: Hands Off, Baby
+11: Tell Me I'm Wrong, It's Fine
+12: You Have a Jedi Sword
+13: Introspective Nasal Gazing
+14: Hot
+15: Robot on the Front
+16: Democracy Is the Worst Form of Government
+17: Facebook Status: Maybe Not Dead
+18: Brine Solids Building Up in Strange Places
+19: Bacon and Beer Event
+20: Soldered Together By Monkeys
+21: The Tent Is Flat and Everyone Is Wet
+22: Mincraft Is the New Apple II
+23: Go For Everything I Want
+24: I'm a Total Fraud
+25: Thunderdome for Antennas
+26: The Tofu Problem
+27: You Are Blowing My Mind
+28: A Lot of Wish Fulfillment
+29: Ducking the Quadcopter
+30: Eventually Lightning Strikes (Repeat)
+30: Eventually Lightning Strikes
+31: If You See a Dongle Run Away
+32: Woo Woo Woo
+33: Quitting My Finnish Lessons
+34: Really Big Cabbage
+35: All These Different Reasons Why You Might Want to Do Something
+36: Drive the Boat with a Wii Mote
+37: Surf's Up
+38: Blame the Monkey
+39: I Blame Space
+40: Mwahaha Session
+41: Pink Universes Die Really Quickly (Repeat)
+41: Pink Universes Die Really Quickly
+42: Blocks of Gold with LCD Displays
+43: A Lot of High-Falutin' Math
+44: Light Up Strikes Back
+45: Yanking on a Cat's Tail Is the Only Way to Learn
+46: I'm Painting the Turtle
+47: Bridge of Toothpicks
+48: Widgets on the Hands of Ants
+49: Is That an Ardunio in Your Pocket
+50: The Podcast Formerly Known As...
+51: There Is No Crying in Strcpy
+52: Maximize the Sonic Boom
+53: Being a Grownup Engineer (Repeat)
+53: Being a Grownup Engineer
+54: Oh! The Hugh Manatee
+55: Embedded Systems and Cricket
+56: Rodents of Unusual Size
+57: Engineering on the Run
+58: Use These Powers For Good
+59: Vision for Simple Minds
+60: Fun Things You Can Make out of Beagles
+61: I Want Programmable Pants
+62: Costs a Penny to Go to the Bathroom (Repeat)
+62: Costs a Penny to Go to the Bathroom
+63: Dingo-Rabbit Deathmatch
+64: Making Making Embedded Whoops
+65: Resonant Frequency of My Butt
+66: As Simple as Possible
+67: Software for Things That Can Kill People
+68: Dancing With Hundreds Of Women
+69: Look at This Entire Aisle of Standoffs
+70: Make Us All into Sherlock Holmes
+71: Dirty Your Mindscape
+72: This Is My NASA Phone
+73: That's a Waste of Bits
+74: All of Us Came in Sixth
+75: End Up in a Puppy Fight
+76: Entropy Is for Wimps
+77: Goldfish, Fetch My Slippers!
+78: Happy Cows (Repeat)
+78: Happy Cows
+79: Not as Efficient as the Borg
+80: Most of Us Are Human Beings
+81: Two of Those People Can't Be Ducks
+82: I Was a Chewbacca Person
+83: The First Time I Was Electrocuted
+84: You Can't Make Money Taking Tests
+85: Stalked by Hoopers and Engineers
+86: Madeupical Word
+87: Make My Own Steel Foundry
+88: Science Is a Lot Like Quilting
+89: I Have New Batteries
+90: Stick It in a Pumpkin
+91: Save Us From Astronauts
+92: Everybody Behave, Please
+93: Delicious Gumbo
+94: Don't Be Clever
+95: The Elon Musk of Earth
+96: Yarn Is Serious Business
+97: Bubblesort Yourself
+98: Figments of My Imagination
+99: You Can Say a Boat (Repeat)
+99: You Can Say a Boat
+100: Unintentional Radiator
+101: Taking Apart the Toaster
+102: The Deadly Fluffy Bunny (With WiFi)
+103: Tentacles Of the Kraken
+104: Only the Paranoid Survive
+105: Some Paths Are More Suicidal
+106: I Am a Scientism
+107: Until They Are Spaghetti
+108: Nebarious
+109: Resurrection of Extreme Programming (Repeat)
+109: Resurrection of Extreme Programming
+110: Happiness Is a Warm Puppy
+111: Potty Train Your Tamagotchi (Repeat)
+111: Potty Train Your Tamagotchi
+112: My Brain Is My Resource
+113: A Noddy Little Program
+114: Wild While Loops
+115: Datasheeps
+116: You Have to Care
+117: In as Much as Which
+118: Awesome and Frequently Useless
+119: Do Your Neighbors Have Any Idea?
+120: Boll Weevil Eradication
+121: The Idea of Mojo
+122: Glue a Board to Your Resume
+123: Banished from Running Linux
+124: Please Don't Light Yourself on Fire (Repeat)
+124: Please Don't Light Yourself On Fire
+125: I Like Cheat Codes
+126: Live From Supercon
+127: Chicken Equals Duck Plus One
+128: The American Pi
+129: Atoms Not Bits
+130: Criminal Training Camp (Repeat)
+130: Criminal Training Camp
+131: Carve Me a Duck
+132: Destruction Is Easy
+133: Plenty of Room in Your Ear
+134: Diet-Friendly Dog Food
+135: No More Yoda Heads
+136: Let's Try Out Some Broccoli
+137: Pausing to Think (Repeat)
+137: Pausing to Think
+138: Quit Yer Whining
+139: Easy to Add Blood Splatter
+140: Physics Is the Same Everywhere
+141: Malevolent and Trying to Trick You
+142: New And Improved Appendages
+143: I'm Thinking of Unicorns
+144: Asking For Clippy
+145: This Is Embedded
+146: The Loyal Opposition
+147: Bolts for Tuco
+148: A Minimum of Two Poops
+149: Flamethrowers Aside
+150: Sad Country Song
+151: Captain Stochastic
+152: Dodecahedrocopter.com
+153: Space Nerf Gun
+154: Physics Is a Big Pain
+155: Foot-Seeking Bullet
+156: Black Knight 2000
+157: Explosion of Multicopters
+158: Programming Is Too Difficult for Humans
+159: Flying Rainbow Children
+160: Chowdered up the Spoilboard
+161: Magenta Doesn't Exist
+162: I Am a Boomerang Enthusiast (Repeat)
+162: I Am a Boomerang Enthusiast
+163: Syringes That Give You Cake
+164: Heatsink in a Shoebox (Repeat)
+164: Heatsink in a Shoebox
+165: When People See a Button
+166: Sardine Tornado
+167: All Aliens Are Shiny
+168: Put Your Gear on the Ping Pong Table
+169: Sit on Top of a Volcano
+170: Electron Gnomes
+171: Perfectly Good Being Square and Green
+172: Tell Forth You Me Please
+173: Everything's Amazing
+174: It's Not Weird
+175: How Hard Could It Be?
+176: Let's Go Light It Up
+177: Boba Fett Fell Down
+178: Alexa Stop
+179: Spaghetti Reducer
+180: Chickens in Helmets
+181: Work on It for Ten Years
+182: Sorry Little Diodes
+183: Robots Having Nervous Breakdowns
+184: Not Likely, Possible, or Safe
+185: Nice Mahogany Table
+186: Sleeping on the Factory Floor
+187: Self-Driving Arm (Repeat)
+187: Self-Driving Arm
+188: Twitter Is a Cocktail Party
+189: The Squishiness Factor
+190: Trust Me, I'm Right
+191: What, Yogurt!?!
+192: Button Connected To Nothing
+193: Axiomatically Did Not Happen
+194: Something For Something
+195: A Bunch of Sputniks
+196: Software Server Thingybob
+197: Smell the Transistor
+198: Unmanned Flying Thingy
+199: Petri Dishes of Doom
+200: Oops
+201: Accidentally Incredibly Dangerous
+202: Flush and Your Inner Fish
+203: Save My Board
+204: Abuse Electricity
+205: Questions about Dumplings
+206: Crushing Amounts of Snow
+207: I Love My Robot Monkey Head
+208: What If You Had a Machine Do It
+209: Debuggerception
+210: The Glass Hour
+211: 4 weeks, 3 days
+212: You Are in Seaworld
+213: Electricity Doesn't Act Like an Apple
+214: Tiny Sensor Problems
+215: Heisenbugs
+216: Bavarian Folk Metal
+217: 10000 Pounds of Pressure
+218: Neutron Star of Dev Boards
+219: Not Obviously Negligent
+220: Cascading Waterfall of Lights
+221: Hiding in Plain Sight
+222: Virtual Bunnie
+223: Gregorian Chants and Things
+224: Interrupts to Interrupt Interrupts
+225: When Toasters Attack
+226: Camp AVR Vs. Camp Microchip
+227: Half of Everything Is Wrong
+228: Pedantic or Andrantic
+229: Slinky with a Lot of Math
+230: What the Hell Is Wrong with Unicorns?
+231: Single Origin Coffee
+232: Blob Is a Good Word
+233: Always the Wrong Way
+234: The Good Word About AI
+235: Imagine That, Suckers!
+236: The Concept of Delayed Gratification
+237: Break All the Laws of Physics
+238: My Brain Is My Toolbelt
+239: Tweet My Boots
+240: Belgian Waffles
+241: One Two Blah Blah Blah Ten
+242: The Cilantro of Robots
+243: Pick a Good One
+244: Magic And Electrons
+245: Tell Me How People Hurt You
+246: Sacrifice That Computer
+247: He’s Not Going to Cut That, Is He?
+248: I’m Not in Charge!
+249: It Depends
+250: Yolo Snarf
+251: I Agreed at the Time
+252: A Good Heuristic for Pain Tolerance
+253: We’ll Pay Them in Fun
+254: Murdering Thousands of Gnomes
+255: Jellyfish Are Pretty Badass
+256: Agglomeration
+257: Small Parts Flew Everywhere
+258: Security Is Another Dimension
+259: Calculators Changed My Life
+260: We Talked a Lot
+261: Blowing Their Fragile Little Minds
+262: Egg Freckles
+263: Experience the Theory
+264: Do It for the Herd
+265: What’s Your Superpower
+266: Drive off the End of the Universe
+267: Cute and Squishy
+268: Cakepan Interferometry
+269: Ultra-Precise Death Ray
+270: Broccoli Is Good Too
+271: Shell Scripts for the Soul
+272: Stick ‘Em on Whales
+273: Off the Topic of My Jammies
+274: Swiss Knife of Embedded Systems
+275: Don’t Do What the Computer Tells You
+276: Playing a Song on a Potato
+277: The Sport of Kings
+278: Bricks’ Batteries Last Forever
+279: Top Pedant
+280: Reginald P. Theodore Johnson
+281: Tame Geek
+282: Tin Can Through a Wet Noodle
+283: Flippendo Is Kind of a Swirly
+284: Honking Big Asparagus
+285: A Chicken Getting to the Other Side
+286: Twenty Cans of Gas
+287: Joke With No Punchline
+288: You Got a Screen!
+289: Stamping HORSE on Zebras
+290: Rule of Thumbs
+291: General Drip and Tinkle
+292: Now I Feel Less Cool
+293: Skateboard Tricks
+294: Ludicrous Numbers of LEDs
+295: In the Key of Lime
+296: Train Me Later
+297: Mice to Do My Bidding
+298: In the Cow Case
+299: Reasonably Foreseeable Misuse
+300: Introverts Disperse!
+301: Giant Novelty Check

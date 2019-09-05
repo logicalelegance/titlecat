@@ -7,6 +7,7 @@ import time
 import math
 import as1130
 import display
+import gc
 
 # Font
 font_5x5_data =[
@@ -115,21 +116,31 @@ i2c = busio.I2C(board.SCL, board.SDA)
 time.sleep(0.5)
 led = as1130.AS1130_I2C(i2c)
 
-fb = display.FrameBuffer(24*8, 5)
+fb = display.FrameBuffer(24*12, 5)
 
 ledfont = display.font(5, 5, font_5x5_data)
 
-fb.draw_string(0, 0, '300: Introverts Disperse', ledfont)
-
-led.draw_framebuffer(fb)
-led.play_movie(True)
 time.sleep(2)
+led.play_movie(True)
 
 ######################### MAIN LOOP ##############################
 
-while True:
-    time.sleep(0.25)
+titlefile = open("/show_titles.txt", "r")
 
+# Read first title
+title = titlefile.readline()
+
+while True:
+    gc.collect()
+    fb.clear_buffer()
+    string_length = fb.draw_string(0, 0, title[:-1], ledfont) # remove CR
+    led.draw_framebuffer(fb, string_length)
+    time.sleep(10)
+
+    title = titlefile.readline()
+    if title == "":
+        titlefile.seek(0,0)
+        title = titlefile.readline()
 
 #for index in range(0, 192):
 #    sinval = math.sin(index/4) * 2.5 + 2.5

@@ -81,7 +81,7 @@ class AS1130:
         if play:
             self.control_write(MOVIE, 0b01000000)      # Turn movies on
         else:
-            self.control_write(MOVIE, 0b01000000)      # Turn movies on
+            self.control_write(MOVIE, 0b00000000)      # Turn movies off
 
     def set_movie_frames(self, frames):
         frames = frames - 1
@@ -161,13 +161,20 @@ class AS1130:
 
     # Draw a large framebuffer to the screen, breaking it up in to frames that
     # fit
-    def draw_framebuffer(self, framebuffer):
+    def draw_framebuffer(self, framebuffer, clip_to_x = 0):
         width = framebuffer.width
         height = framebuffer.height
-
+        clip_by = framebuffer.width - clip_to_x
 
         numberofframes = int(width / 24)
+        numberofHWframes = int((width - clip_by) / 24) + 1
+
+        if numberofHWframes > numberofframes:
+            numberofHWframes = numberofframes
+
+      #  self.set_movie_frames(numberofHWframes)
         self.set_movie_frames(numberofframes)
+
         for frame in range(0, numberofframes):
 
             # copy subframe
