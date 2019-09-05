@@ -129,15 +129,16 @@ titlefile = open("/show_titles.txt", "r")
 
 # Read first title
 title = titlefile.readline()
-
 while True:
     gc.collect()
     fb.clear_buffer()
     string_length = fb.draw_string(0, 0, title[:-1], ledfont) # remove CR
     led.draw_framebuffer(fb, string_length)
-    time.sleep(10)
+    time.sleep(0.1)
 
     title = titlefile.readline()
+    print(title)
+    print(gc.mem_free())
     if title == "":
         titlefile.seek(0,0)
         title = titlefile.readline()

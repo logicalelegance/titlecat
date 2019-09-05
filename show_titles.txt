@@ -7,7 +7,6 @@
 7: Lights, Camera, Electrons
 8: Studebaker Love Story
 9: Kidnapped and Blindfolded
-10: Hands Off, Baby (Repeat)
 10: Hands Off, Baby
 11: Tell Me I'm Wrong, It's Fine
 12: You Have a Jedi Sword
@@ -28,7 +27,6 @@
 27: You Are Blowing My Mind
 28: A Lot of Wish Fulfillment
 29: Ducking the Quadcopter
-30: Eventually Lightning Strikes (Repeat)
 30: Eventually Lightning Strikes
 31: If You See a Dongle Run Away
 32: Woo Woo Woo
@@ -40,7 +38,6 @@
 38: Blame the Monkey
 39: I Blame Space
 40: Mwahaha Session
-41: Pink Universes Die Really Quickly (Repeat)
 41: Pink Universes Die Really Quickly
 42: Blocks of Gold with LCD Displays
 43: A Lot of High-Falutin' Math
@@ -53,7 +50,6 @@
 50: The Podcast Formerly Known As...
 51: There Is No Crying in Strcpy
 52: Maximize the Sonic Boom
-53: Being a Grownup Engineer (Repeat)
 53: Being a Grownup Engineer
 54: Oh! The Hugh Manatee
 55: Embedded Systems and Cricket
@@ -63,7 +59,6 @@
 59: Vision for Simple Minds
 60: Fun Things You Can Make out of Beagles
 61: I Want Programmable Pants
-62: Costs a Penny to Go to the Bathroom (Repeat)
 62: Costs a Penny to Go to the Bathroom
 63: Dingo-Rabbit Deathmatch
 64: Making Making Embedded Whoops
@@ -80,7 +75,6 @@
 75: End Up in a Puppy Fight
 76: Entropy Is for Wimps
 77: Goldfish, Fetch My Slippers!
-78: Happy Cows (Repeat)
 78: Happy Cows
 79: Not as Efficient as the Borg
 80: Most of Us Are Human Beings
@@ -102,7 +96,6 @@
 96: Yarn Is Serious Business
 97: Bubblesort Yourself
 98: Figments of My Imagination
-99: You Can Say a Boat (Repeat)
 99: You Can Say a Boat
 100: Unintentional Radiator
 101: Taking Apart the Toaster
@@ -113,10 +106,8 @@
 106: I Am a Scientism
 107: Until They Are Spaghetti
 108: Nebarious
-109: Resurrection of Extreme Programming (Repeat)
 109: Resurrection of Extreme Programming
 110: Happiness Is a Warm Puppy
-111: Potty Train Your Tamagotchi (Repeat)
 111: Potty Train Your Tamagotchi
 112: My Brain Is My Resource
 113: A Noddy Little Program
@@ -130,14 +121,12 @@
 121: The Idea of Mojo
 122: Glue a Board to Your Resume
 123: Banished from Running Linux
-124: Please Don't Light Yourself on Fire (Repeat)
 124: Please Don't Light Yourself On Fire
 125: I Like Cheat Codes
 126: Live From Supercon
 127: Chicken Equals Duck Plus One
 128: The American Pi
 129: Atoms Not Bits
-130: Criminal Training Camp (Repeat)
 130: Criminal Training Camp
 131: Carve Me a Duck
 132: Destruction Is Easy
@@ -145,7 +134,6 @@
 134: Diet-Friendly Dog Food
 135: No More Yoda Heads
 136: Let's Try Out Some Broccoli
-137: Pausing to Think (Repeat)
 137: Pausing to Think
 138: Quit Yer Whining
 139: Easy to Add Blood Splatter
@@ -171,10 +159,8 @@
 159: Flying Rainbow Children
 160: Chowdered up the Spoilboard
 161: Magenta Doesn't Exist
-162: I Am a Boomerang Enthusiast (Repeat)
 162: I Am a Boomerang Enthusiast
 163: Syringes That Give You Cake
-164: Heatsink in a Shoebox (Repeat)
 164: Heatsink in a Shoebox
 165: When People See a Button
 166: Sardine Tornado
@@ -198,7 +184,6 @@
 184: Not Likely, Possible, or Safe
 185: Nice Mahogany Table
 186: Sleeping on the Factory Floor
-187: Self-Driving Arm (Repeat)
 187: Self-Driving Arm
 188: Twitter Is a Cocktail Party
 189: The Squishiness Factor
@@ -259,7 +244,7 @@
 244: Magic And Electrons
 245: Tell Me How People Hurt You
 246: Sacrifice That Computer
-247: He’s Not Going to Cut That, Is He?
+247: He's Not Going to Cut That, Is He?
 248: I’m Not in Charge!
 249: It Depends
 250: Yolo Snarf
@@ -277,20 +262,20 @@
 262: Egg Freckles
 263: Experience the Theory
 264: Do It for the Herd
-265: What’s Your Superpower
+265: What's Your Superpower
 266: Drive off the End of the Universe
 267: Cute and Squishy
 268: Cakepan Interferometry
 269: Ultra-Precise Death Ray
 270: Broccoli Is Good Too
 271: Shell Scripts for the Soul
-272: Stick ‘Em on Whales
+272: Stick 'Em on Whales
 273: Off the Topic of My Jammies
 274: Swiss Knife of Embedded Systems
 275: Don’t Do What the Computer Tells You
 276: Playing a Song on a Potato
 277: The Sport of Kings
-278: Bricks’ Batteries Last Forever
+278: Bricks' Batteries Last Forever
 279: Top Pedant
 280: Reginald P. Theodore Johnson
 281: Tame Geek

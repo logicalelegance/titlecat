@@ -51,5 +51,7 @@ class font:
 
     def glyph(self, character):
         index = ord(character) - 32
+        if index > len(self.bitmaptable):
+            index = ord('?')
         glyph_bits = self.bitmaptable[index]
         return glyph_bits
