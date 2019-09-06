@@ -48,7 +48,7 @@ SHUTDOWN    = const(0x09)
 #OPENLED     = const(0x20)
 
 # Various constants
-MILLIAMPS_FACTOR = 30.0 / 255.0
+MILLIAMPS_FACTOR = 255.0 / 30
 NUM_FRAMES = const(36)
 
 class AS1130:
@@ -60,7 +60,7 @@ class AS1130:
         self.control_write(SHUTDOWN, 0b00000000)  # Turn on the display
 
         self.set_ram_config(1)
-        self.set_current(10)
+        self.set_current(18)
         self.control_write(DSP_OPTION, 0b11101011)
         self.control_write(MOVIE, 0b00000000)      # Turn movies off
         self.control_write(MOVIEMODE, 0b00000000)
@@ -79,9 +79,14 @@ class AS1130:
 
     def play_movie(self, play):
         if play:
+            self.control_write(PICTURE, 0b00000000)   # Display frame 1
             self.control_write(MOVIE, 0b01000000)      # Turn movies on
+            self.control_write(DSP_OPTION, 0b11101011)
+
         else:
             self.control_write(MOVIE, 0b00000000)      # Turn movies off
+            self.control_write(PICTURE, 0b01000000)   # Display frame 1
+            self.control_write(DSP_OPTION, 0b00001011)
 
     def set_movie_frames(self, frames):
         frames = frames - 1
@@ -112,7 +117,7 @@ class AS1130:
             milliAmps = 0
 
         register_value = int(milliAmps * MILLIAMPS_FACTOR)
-        self.control_write(CURRENT, 0x80)
+        self.control_write(CURRENT, register_value)
 
     def _write_register_byte(self, register, value):
         # Write a single byte to the specified register
@@ -132,19 +137,23 @@ class AS1130:
     def _databyte(self, x, y):
         return int((y*3)+(x/8)) # for a 24x5 display
 
-    def _write_buffer_to_frame(self, framenum, buffer, width, height):
+    def _write_buffer_to_frame(self, framenum, buffer, width, height, use_pwm = False):
         self.select_frame(framenum)
 
         # build a buffer to write to the display
         displaybuffer = bytearray(0x18)
-
+        pwmbuffer = bytearray(132)
         for y in range(0, height):
             for x in range(0, width):
+                ledIndex = (x*5+y)
+                pwmbuffer[ledIndex] = buffer[x + y * width]
+                registerBitIndex = ledIndex%10
+                registerIndex = int(ledIndex/10)*2+int(registerBitIndex/8)
                 if (buffer[x + y * width] != 0x00):
-                    ledIndex = (x*5+y)
-                    registerBitIndex = ledIndex%10
-                    registerIndex = int(ledIndex/10)*2+int(registerBitIndex/8)
                     displaybuffer[registerIndex] |= (1<<(registerBitIndex&7))
+                else:
+                    displaybuffer[registerIndex] &= ~(1<<(registerBitIndex&7))
+
         displaybuffer[1] |= 0 # PWM Set 0
         for counter in range(0, 0x18):
             self._write_value_at_id(counter, displaybuffer[counter])
@@ -154,14 +163,19 @@ class AS1130:
             # Set up the blink bits
                 self._write_value_at_id(counter, 0x00)
 
-        for counter in range(0x18, 0x9B):
-            # Set all PWM values
-            self._write_value_at_id(counter, 0xFF)
-
+        for y in range(0, height):
+            for x in range(0, width):
+                ledIndex = (x*5+y)
+                counter = ledIndex + 0x18
+                # Set all PWM values
+                if use_pwm:
+                    self._write_value_at_id(counter, pwmbuffer[ledIndex])
+                else:
+                    self._write_value_at_id(counter, 0xFF)
 
     # Draw a large framebuffer to the screen, breaking it up in to frames that
     # fit
-    def draw_framebuffer(self, framebuffer, clip_to_x = 0):
+    def draw_framebuffer(self, framebuffer, clip_to_x = 0, use_pwm = False):
         width = framebuffer.width
         height = framebuffer.height
         clip_by = framebuffer.width - clip_to_x
@@ -182,7 +196,7 @@ class AS1130:
             for x in range(0, 24):
                 for y in range(0, 5):
                     subframe[x + y * 24] = framebuffer._framebuffer[x + (24 * frame) + width * y]
-            self._write_buffer_to_frame(frame, subframe, int(width / numberofframes), height)
+            self._write_buffer_to_frame(frame, subframe, int(width / numberofframes), height, use_pwm)
 
 class AS1130_I2C(AS1130):
 

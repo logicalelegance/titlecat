@@ -7,7 +7,7 @@ import time
 import math
 import as1130
 import display
-import gc
+import random
 
 # Font
 font_5x5_data =[
@@ -106,7 +106,6 @@ font_5x5_data =[
 	[0b10000000,0b10000000,0b0,0b10000000,0b10000000], # |
 	[0b11000000,0b1000000,0b1100000,0b1000000,0b11000000], # }
 	[0b0,0b0,0b0,0b0,0b0], # ~
-	[0x00,0x00,0x00,0x00,0x00]
 ]
 
 # Start of application code
@@ -116,34 +115,43 @@ i2c = busio.I2C(board.SCL, board.SDA)
 time.sleep(0.5)
 led = as1130.AS1130_I2C(i2c)
 
-fb = display.FrameBuffer(24*12, 5)
+fb = display.FrameBuffer(24*8, 5)
 
 ledfont = display.font(5, 5, font_5x5_data)
-
+fb.clear_buffer()
+led.draw_framebuffer(fb, 0)
 time.sleep(2)
-led.play_movie(True)
 
 ######################### MAIN LOOP ##############################
 
 titlefile = open("/show_titles.txt", "r")
 
 # Read first title
+mode = 2
 title = titlefile.readline()
 while True:
-    gc.collect()
-    fb.clear_buffer()
-    string_length = fb.draw_string(0, 0, title[:-1], ledfont) # remove CR
-    led.draw_framebuffer(fb, string_length)
-    time.sleep(0.1)
 
-    title = titlefile.readline()
-    print(title)
-    print(gc.mem_free())
-    if title == "":
-        titlefile.seek(0,0)
-        title = titlefile.readline()
+        led.play_movie(True)
 
-#for index in range(0, 192):
-#    sinval = math.sin(index/4) * 2.5 + 2.5
-#    fb.set_pixel_value(index, int(sinval), 0xFF)
-#    fb.set_pixel_value(index, abs(4-int(sinval)), 0xFF)
+        # Draw Titles
+        fb.clear_buffer()
+        if mode == 1:
+            string_length = fb.draw_string(0, 0, title[:-1], ledfont) # remove CR
+
+            title = titlefile.readline()
+            if title == "":
+                titlefile.seek(0,0)
+                title = titlefile.readline()
+
+            led.draw_framebuffer(fb, string_length)
+            time.sleep(10)
+        else:
+            for x in range(0, 24*8):
+                val = math.sin((16*3.14)/192 * x)
+                for y in range (0, 5):
+                    fb.set_pixel_value(x, y, int((val + 1)/2.0 * 255.0))
+            led.draw_framebuffer(fb, 0, True)
+            time.sleep(10)
+
+
+
