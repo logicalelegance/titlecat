@@ -108,6 +108,12 @@ class AS1130:
 
         self.control_write(AS_CONFIG, ram_config)
 
+    def set_scrolling(self, enable):
+        if enable:
+            self.control_write(FRAMETIME, 0b01110001)
+        else:
+            self.control_write(FRAMETIME, 0b00000001)
+
     def set_current(self, milliAmps):
 
         # Convert current to register value

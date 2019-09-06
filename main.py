@@ -115,27 +115,30 @@ i2c = busio.I2C(board.SCL, board.SDA)
 time.sleep(0.5)
 led = as1130.AS1130_I2C(i2c)
 
-fb = display.FrameBuffer(24*8, 5)
-
-ledfont = display.font(5, 5, font_5x5_data)
-fb.clear_buffer()
-led.draw_framebuffer(fb, 0)
-time.sleep(2)
-
 ######################### MAIN LOOP ##############################
 
 titlefile = open("/show_titles.txt", "r")
 
 # Read first title
-mode = 1
+mode = 2
 title = titlefile.readline()
+init = False
 while True:
 
-        led.play_movie(True)
-
         # Draw Titles
-        fb.clear_buffer()
         if mode == 1:
+            if init == False:
+                fb = display.FrameBuffer(24*8, 5)
+                ledfont = display.font(5, 5, font_5x5_data)
+                fb.clear_buffer()
+                led.draw_framebuffer(fb, 0)
+                time.sleep(2)
+                play_movie(False)
+                led.set_scrolling(True)
+                led.play_movie(True)
+                init = True
+            fb.clear_buffer()
+
             string_length = fb.draw_string(0, 0, title[:-1], ledfont) # remove CR
 
             title = titlefile.readline()
@@ -144,14 +147,31 @@ while True:
                 title = titlefile.readline()
 
             led.draw_framebuffer(fb, string_length)
-            time.sleep(0.1)
+            time.sleep(5)
         else:
-            for x in range(0, 24*8):
-                val = math.sin((16*3.14)/192 * x)
+            if init == False:
+                fb = display.FrameBuffer(24*1, 5)
+                fb.clear_buffer()
+                led.draw_framebuffer(fb, 0)
+                time.sleep(2)
+                led.set_scrolling(False)
+                led.play_movie(False)
+              #  led.play_movie(True)
+                frame = 0
+                init = True
+
+            frame = (frame + 1) % 8
+            for x in range(0, 24):
+                xval = (x / 24) * 2
+                t = frame * 5
+                val = math.sin((xval) * 10 + t)
+                cx = xval + .5 * math.sin(t / 5)
                 for y in range (0, 5):
-                    fb.set_pixel_value(x, y, int((val + 1)/2.0 * 255.0))
+                    cy = y + .5 * math.cos(t / 3)
+                    v = math.sin(10*(xval*math.sin(t / 2) + y*math.cos(t/3) + t))
+                    v = val + v
+                    fb.set_pixel_value(x, y, int((v + 2)/4.0 * 255.0))
             led.draw_framebuffer(fb, 0, True)
-            time.sleep(10)
 
 
 
