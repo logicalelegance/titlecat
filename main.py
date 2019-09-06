@@ -127,7 +127,7 @@ time.sleep(2)
 titlefile = open("/show_titles.txt", "r")
 
 # Read first title
-mode = 2
+mode = 1
 title = titlefile.readline()
 while True:
 
@@ -144,7 +144,7 @@ while True:
                 title = titlefile.readline()
 
             led.draw_framebuffer(fb, string_length)
-            time.sleep(10)
+            time.sleep(0.1)
         else:
             for x in range(0, 24*8):
                 val = math.sin((16*3.14)/192 * x)
